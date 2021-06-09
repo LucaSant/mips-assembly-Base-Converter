@@ -8,75 +8,75 @@ again: 	.asciiz "\n Valor invalido, coloque outro...\n"
 	.globl dec_to_bin
 	.globl dec_to_hexa
 	
-#Parâmetros para as funções de conversão a partir da base decimal...
+#ParÃ¢metros para as funÃ§Ãµes de conversÃ£o a partir da base decimal...
 
-# ---> $a3 : endereço da string com valores hexadecimais
-# ---> $a2 : endereço do fim acumulador para construção da saída em binário ou hexadecimal
-#  ---> $t2 :  número de entrada na base decimal
+# ---> $a3 : endereÃ§o da string com valores hexadecimais
+# ---> $a2 : endereÃ§o do fim acumulador para construÃ§Ã£o da saida em binario ou hexadecimal
+#  ---> $t2 :  nÃºmero de entrada na base decimal
 
 dec_to_bin:
 
-	li $s1, 32 #config tamanho máximo de dígitos da saída na base binária
+	li $s1, 32 #config tamanho mÃ¡ximo de dÃ­gitos da saida na base binÃ¡ria
 	li $t6, 1 
-	li $t4, 1 #valor para criação da máscara para base binária
+	li $t4, 1 #valor para criaÃ§Ã£o da mÃ¡scara para base binÃ¡ria
 	
 	j convert
 
 
 dec_to_hexa:
 	
-	li $s1, 8 #config tamanho máximo de dígitos da saída na base hexadecimal
+	li $s1, 8 #config tamanho mÃ¡ximo de dÃ­gitos da saida na base hexadecimal
 	li $t6, 4 
-	li $t4, 4 #valor para criação da máscara para base hexadecimal
+	li $t4, 4 #valor para criaÃ§Ã£o da Ã¡ para base hexadecimal
 	
 	j convert
 
 convert:
 	
-	#criação da máscara para isolar a quantidade de bits desejado
-	# - binário: temos o interesse de isolar um bit por vez e assim verificar se ele é 0 ou 1
+	#criaÃ§Ã£o da Ã¡ para isolar a quantidade de bits desejado
+	# - binario: temos o interesse de isolar um bit por vez e assim verificar se ele Ã© 0 ou 1
 	# - hexadecimal: isolamos 1 byte por vez e assim verificamos seu valor entre 0 e 15, depois procuramos o valor correspondente na string de hexa
 	
 	li $s0, 1 
 	sllv $s0, $s0, $t4 #$t4 pode ser 1 (um bit por vez) ou pode ser 4 (1 byte por vez)
 	sub $s0, $s0, 1 #mascara criada para 1 ou 4 bit 
-	#forma das máscaras:
+	#forma das mï¿½scaras:
 	#para 1 bit:    0000 0000 0000 0000 0000 0000 0000 0001 
 	#para 4 bits:  0000 0000 0000 0000 0000 0000 0000 1111
 	
 
-	li $s2, 0 #váriavel que controla o número de bits do número contido $t2 que serão deslocados (...) 
-	#(...) para assim isolarmos apenas os desejados usando a máscara
-	li $t5, 0 #contador do número de dígitos do número de saída
+	li $s2, 0 #vï¿½riavel que controla o nÃºmero de bits do nÃºmero contido $t2 que serÃ£o deslocados (...) 
+	#(...) para assim isolarmos apenas os desejados usando a Ã¡
+	li $t5, 0 #contador do nÃºmero de dÃ­gitos do nÃºmero de saida
 
 
 	
 loop:
 	 
-	beq $t5, $s1, endloop 			# se o número de digitos máximos for atingido, o loop acaba
+	beq $t5, $s1, endloop 			# se o nÃºmero de digitos mÃ¡ximos for atingido, o loop acaba
 	
 	srlv $t3, $t2, $s2  				# $t3 recebe o numero de entrada descolado para a direita
 
-	and $t1, $t3, $s0  				# realiza a operação lógica E entre o número de entrada deslocado ($t3) e a máscara ($s0)
+	and $t1, $t3, $s0  				# realiza a operaÃ§Ã£o lÃ³gica E entre o nÃºmero de entrada deslocado ($t3) e a Ã¡ ($s0)
 	# $t1 tem os bits isolados
 	
-	add $t7, $a3, $t1				 #soma esse valor ( entre 0 e 15, ou entre 0 e 1) no endereço do início da string hexadecimal e (...)
+	add $t7, $a3, $t1				 #soma esse valor ( entre 0 e 15, ou entre 0 e 1) no endereÃ§o do inÃ­cio da string hexadecimal e (...)
 								# (...)  coloca o resultado em $t7
 	
 	
-	addi $a2, $a2, -1				 # $a2 é fim do espaço alocado, logo ao colocar -1 vamos aumentando o espaço onde (...)
+	addi $a2, $a2, -1				 # $a2 Ã© fim do espaÃ§o alocado, logo ao colocar -1 vamos aumentando o espaÃ§o onde (...)
 								# (...) colocaremos os digitos do valor convertido
 	
 	
 	
-	lb $a0, 0 ($t7) 			#como a máscara já está criada, podemos usar $t4 outra vez. Coloquemos o valor contido no endereço (...) 
+	lb $a0, 0 ($t7) 			#como a Ã¡ jÃ¡ estÃ£o criada, podemos usar $t4 outra vez. Coloquemos o valor contido no endereÃ§o (...) 
 							# (...) armazenado em $t7
 	
-	sb $a0, 0 ($a2)			# depois colocar valor no endereço armazenado em $a2, ou seja, colcoar no acumulador
+	sb $a0, 0 ($a2)			# depois colocar valor no endereÃ§o armazenado em $a2, ou seja, colcoar no acumulador
 							#addi $a2, $a2, -1
 	
-	add $s2, $s2, $t6 			#aumenta em 1 ou 4 o número de bits que serão deslocados para direita
-	addi $t5, $t5,1 			# +1 digito do número de saída (o loop para quando for 8 (para o hexadecimal) ou 32 (para binario)
+	add $s2, $s2, $t6 			#aumenta em 1 ou 4 o nÃºmero de bits que serÃ£o deslocados para direita
+	addi $t5, $t5,1 			# +1 digito do nÃºmero de saida (o loop para quando for 8 (para o hexadecimal) ou 32 (para binario)
 	
 	j loop 
 	

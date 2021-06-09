@@ -1,10 +1,10 @@
 	.data
 	.align 0
-str_output_base_error: .asciiz "\nBase de saída incorreta, coloque valores válidos (2, 10 ou 16)... \n"
-input_num_dec:	.asciiz "\nColoque um numero na base decimal ( até +-  2147483647): "
-input_num_hexa:	.asciiz "\n Coloque um numero na base hexadecimal (0123456789ABCDEF em até 8 digitos): "
-input_num_bin:	.asciiz "\n Coloque um numero na base binaria (até 32 digitos): "
-equal_base:        	.asciiz "\n As duas bases inseridas são iguais!\n""
+str_output_base_error: .asciiz "\nBase de saida incorreta, coloque valores validos (2, 10 ou 16)... \n"
+input_num_dec:	.asciiz "\nColoque um numero na base decimal ( ate +-  2147483647): "
+input_num_hexa:	.asciiz "\n Coloque um numero na base hexadecimal (0123456789ABCDEF em ate 8 digitos): "
+input_num_bin:	.asciiz "\n Coloque um numero na base binaria (ate 32 digitos): "
+equal_base:        	.asciiz "\n As duas bases inseridas sao iguais!\n"
 	.text
 	.globl num_bin
 	.globl num_hexa
@@ -12,42 +12,42 @@ equal_base:        	.asciiz "\n As duas bases inseridas são iguais!\n""
 	
 	
 num_bin:
-#inserir o número de entrada
+#inserir o nÃºmero de entrada
 	li $v0, 4
 	la $a0, input_num_bin
 	syscall 
 
 	
 	li $v0, 8			#para binario a entrada deve ser uma string 
-	la $a0, ($t8)		#$a0 guarda o endereço onde a string vai ser inserida
-	la $t2, ($a0)		#movemos para $t2 utilizar em outra funções
+	la $a0, ($t8)		#$a0 guarda o endereÃ§o onde a string vai ser inserida
+	la $t2, ($a0)		#movemos para $t2 utilizar em outra funÃ§Ãµes
 	syscall
 
-	jal  output_base	#chama função para ler a base de saída
-	move $t9, $v0		#na volta a base está em $v0, passamor para $t9 
+	jal  output_base	#chama funÃ§Ã£o para ler a base de saida
+	move $t9, $v0		#na volta a base estÃ£o em $v0, passamor para $t9 
 	
-	#a partir da base de saída definmos qual conversão será realizada
+	#a partir da base de saida definmos qual conversÃ£o serÃ¡ realizada
 	beq $t9, 10, bin_to_dec	
 	beq  $t9, 16, bin_to_hexa
 	
-#caso a base não seja nem 10 e 16, que são bases diferentes da atual, não haverá conversão
+#caso a base nÃ£o seja nem 10 e 16, que sÃ£o bases diferentes da atual, nÃ£o haverÃ¡ conversÃ£o
 noconversion_bin:	
-	bne $t9, 2,  output_base_error	#se a base de saída também não for binaria, então é inválida
+	bne $t9, 2,  output_base_error	#se a base de saida tambem nÃ£o for binaria, entÃ£o Ã© invÃ¡lida
 
-#se for binária, temos apenas que conferir se o valor digitado é válido
-	jal bin_to_dec					#chamamos a função para converter para decimal
+#se for binaria, temos apenas que conferir se o valor digitado Ã© vÃ¡lido
+	jal bin_to_dec					#chamamos a funÃ§Ã£o para converter para decimal
 
-	li $v0, 4						#se chamada volta da função, então é válida
-	la $a0, equal_base				#vamos imprimir que as bases são iguais
+	li $v0, 4						#se chamada volta da funÃ§Ã£o, entÃ£o Ã© vÃ¡lida
+	la $a0, equal_base				#vamos imprimir que as bases sÃ£o iguais
 	syscall
 	
-	move $t2, $t6					#move valores de registradores pois a saida de bin_to_dec e a entrada de dec_to_bin estão em registradores diferente
+	move $t2, $t6					#move valores de registradores pois a saida de bin_to_dec e a entrada de dec_to_bin estÃ£o em registradores diferente
 	
 	j dec_to_bin					# converte de volta para depois imprimir 
 	
 	
 num_hexa:
-#a operação de num_hexa é muito semelhante ao num_bin
+#a operaÃ§Ã£o de num_hexa Ã© muito semelhante ao num_bin
 	li $v0, 4
 	la $a0, input_num_hexa
 	syscall
@@ -80,32 +80,32 @@ noconversion_hexa:
 
 num_dec:
 	
-	li $v0, 4			#a entrada na base decimal é um inteiro
+	li $v0, 4			#a entrada na base decimal Ã© um inteiro
 	la $a0, input_num_dec
 	syscall
 
-	li $v0, 5        # Lê o número em decimal
+	li $v0, 5        # LÃª o nÃºmero em decimal
 	syscall
-	move $t2, $v0  #o número de entrada fica em $t2
+	move $t2, $v0  #o nÃºmero de entrada fica em $t2
 	
-	jal output_base        #chama a função responsável por ler a base de saída
+	jal output_base        #chama a funÃ§Ã£o responsÃ¡vel por ler a base de saida
 	move $t9, $v0         # move o valor da base para o registrador $a3
 	
-	#vai para função de converção específica 
+	#vai para funÃ§Ã£o de converÃ§Ã£o especÃ­fica 
 	
 	
 	beq $t9, 2, dec_to_bin   
 	beq $t9, 16, dec_to_hexa
 	
-	#se a base de saída digitado não é 2 nem 16 ....
+	#se a base de saida digitado nÃ£o Ã© 2 nem 16 ....
 noconversio_dec:
 
-	bne $t9, 10,  output_base_error   	# se a base de entrada e saída não são iguais, então a base de saída é inválida
+	bne $t9, 10,  output_base_error   	# se a base de entrada e saida nÃ£o sÃ£o iguais, entÃ£o a base de saida Ã© invÃ¡lida
 	
-	move $t6, $t2						#se não é inválido, muda o valor de registrador para  que seja impresso por print_output_dec
+	move $t6, $t2						#se nÃ£o Ã© invÃ¡lido, muda o valor de registrador para  que seja impresso por print_output_dec
 	j print_output_dec
 
- output_base_error:						#quando a base de sáida é inválida, imprime o fato e pede para entrar com um novo valor
+ output_base_error:						#quando a base de saida Ã© invÃ¡lida, imprime o fato e pede para entrar com um novo valor
 
 	li $v0, 4
 	la $a0, str_output_base_error
