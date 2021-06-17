@@ -2,7 +2,7 @@
 	.align 0
 
 str_output_base_error: .asciiz "\nBase de saida incorreta, coloque valores validos (2, 10 ou 16)... \n"
-input_num_dec:	.asciiz "\nColoque um numero na base decimal ( ate +-  2147483647): "
+input_num_dec:	.asciiz "\nColoque um numero na base decimal ( ate 4294967295): "
 input_num_hexa:	.asciiz "\n Coloque um numero na base hexadecimal (0123456789ABCDEF em ate 8 digitos): "
 input_num_bin:	.asciiz "\n Coloque um numero na base binaria (ate 32 digitos): "
 equal_base:        	.asciiz "\n As duas bases inseridas sao iguais!\n"
