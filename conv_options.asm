@@ -12,44 +12,45 @@ equal_base:        	.asciiz "\n As duas bases inseridas sao iguais!\n"
 	.globl num_dec
 	
 	
+	
 num_bin:
-#inserir o número de entrada
+#inserir o numero de entrada
 	li $v0, 4
 	la $a0, input_num_bin
 	syscall 
 
 	
 	li $v0, 8			#para binario a entrada deve ser uma string 
-	la $a0, ($t8)		#$a0 guarda o endereço onde a string vai ser inserida
-	la $t2, ($a0)		#movemos para $t2 utilizar em outra funções
+	la $a0, ($t8)		#$a0 guarda o endereco onde a string vai ser inserida
+	la $t2, ($a0)		#movemos para $t2 utilizar em outra funcoes
 	syscall
 
-	jal  output_base	#chama função para ler a base de saida
-	move $t9, $v0		#na volta a base estão em $v0, passamor para $t9 
+	jal  output_base	#chama funcao para ler a base de saida
+	move $t9, $v0		#na volta a base estao em $v0, passamor para $t9 
 	
-	#a partir da base de saida definmos qual conversão será realizada
+	#a partir da base de saida definmos qual conversao sera realizada
 	beq $t9, 10, bin_to_dec	
 	beq  $t9, 16, bin_to_hexa
 	
-#caso a base não seja nem 10 e 16, que são bases diferentes da atual, não haverá conversão
+#caso a base nao seja nem 10 e 16, que sao bases diferentes da atual, nao havera conversao
 noconversion_bin:
 
-	bne $t9 ,2,  output_base_error	#se a base de saida tambem não for binaria, então é inválida
+	bne $t9 ,2,  output_base_error	#se a base de saida tambem nao for binaria, estao eh invalida
 
-#se for binaria, temos apenas que conferir se o valor digitado é válido
-	jal bin_to_dec					#chamamos a função para converter para decimal
+#se for binaria, temos apenas que conferir se o valor digitado eh valido
+	jal bin_to_dec					#chamamos a funcao para converter para decimal
 
-	li $v0, 4						#se chamada volta da função, então é válida
-	la $a0, equal_base				#vamos imprimir que as bases são iguais
+	li $v0, 4						#se chamada volta da funcao, estao eh valida
+	la $a0, equal_base				#vamos imprimir que as bases sao iguais
 	syscall
 	
-	move $t2, $t6					#move valores de registradores pois a saida de bin_to_dec e a entrada de dec_to_bin estão em registradores diferente
+	move $t2, $t6					#move valores de registradores pois a saida de bin_to_dec e a entrada de dec_to_bin estao em registradores diferente
 	
 	j dec_to_bin					# converte de volta para depois imprimir 
 	
 	
 num_hexa:
-#a operação de num_hexa é muito semelhante ao num_bin
+#a operacao de num_hexa eh muito semelhante ao num_bin
 	li $v0, 4
 	la $a0, input_num_hexa
 	syscall
@@ -83,32 +84,37 @@ noconversion_hexa:
 
 num_dec:
 	
-	li $v0, 4			#a entrada na base decimal é um inteiro
+	li $v0, 4			#a entrada na base decimal eh um inteiro
 	la $a0, input_num_dec
 	syscall
 
-	li $v0, 5        # Lê o número em decimal
+	li $v0, 8
+	la $a0, ($t8)
+	la $t2, ($a0)
 	syscall
-	move $t2, $v0  #o número de entrada fica em $t2
-	
-	jal output_base        #chama a função responsável por ler a base de saida
+
+	jal output_base        #chama a funcao responsavel por ler a base de saida
 	move $t9, $v0         # move o valor da base para o registrador $a3
 	
-	#vai para função de converção específica 
-	
-	
+	jal char_to_int	#chama a funcao para pegar os caracteres e transformar em inteiros
+ 	
+	#vai para funcao de conversao especifica
 	beq $t9, 2, dec_to_bin   
 	beq $t9, 16, dec_to_hexa
 	
-	#se a base de saida digitado não é 2 nem 16 ....
+	#se a base de saida digitado nao eh 2 nem 16 ....
 noconversio_dec:
 
-	bne $t9, 10,  output_base_error   	# se a base de entrada e saida não são iguais, então a base de saida é inválida
+	bne $t9, 10,  output_base_error   	# se a base de entrada e saida nao sao iguais, estao a base de saida eh invalida
 	
-	move $t6, $t2						#se não é inválido, muda o valor de registrador para  que seja impresso por print_output_dec
+	li $v0, 4
+	la $a0, equal_base
+	syscall
+	
+	move $t6, $t2						#se nao eh invalido, muda o valor de registrador para  que seja impresso por print_output_dec
 	j print_output_dec
 
- output_base_error:						#quando a base de saida é inválida, imprime o fato e pede para entrar com um novo valor
+ output_base_error:						#quando a base de saida eh invalida, imprime o fato e pede para entrar com um novo valor
 
 	li $v0, 4
 	la $a0, str_output_base_error
