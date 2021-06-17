@@ -1,5 +1,6 @@
 	.data
 	.align 0
+
 str_output_base_error: .asciiz "\nBase de saida incorreta, coloque valores validos (2, 10 ou 16)... \n"
 input_num_dec:	.asciiz "\nColoque um numero na base decimal ( ate +-  2147483647): "
 input_num_hexa:	.asciiz "\n Coloque um numero na base hexadecimal (0123456789ABCDEF em ate 8 digitos): "
@@ -31,8 +32,9 @@ num_bin:
 	beq  $t9, 16, bin_to_hexa
 	
 #caso a base não seja nem 10 e 16, que são bases diferentes da atual, não haverá conversão
-noconversion_bin:	
-	bne $t9, 2,  output_base_error	#se a base de saida tambem não for binaria, então é inválida
+noconversion_bin:
+
+	bne $t9 ,2,  output_base_error	#se a base de saida tambem não for binaria, então é inválida
 
 #se for binaria, temos apenas que conferir se o valor digitado é válido
 	jal bin_to_dec					#chamamos a função para converter para decimal
@@ -53,7 +55,8 @@ num_hexa:
 	syscall
 
 	li $v0, 8
-	la $t2, ($t8)
+	la $a0, ($t8)
+	la $t2, ($a0)
 	syscall
 	
 	

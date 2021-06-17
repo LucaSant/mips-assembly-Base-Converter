@@ -21,7 +21,7 @@ bin_to_dec:
 
 #loop que valida o valor de entrada e adiciona bit a bit no registrador que guarda o resultado em inteiro	
 loop_one:
-	beq $t4, 32, end_loop_one		#se o contador $t4 chegar em 32, que é o tamanho máximo de digitos suportado em binario, a entrada é invalida 
+	beq $t4, 33, invalid	#se o contador $t4 chegar em 32, que é o tamanho máximo de digitos suportado em binario, a entrada é invalida 
 	beq $s1, $zero,  end_loop_one 	#se o conteudo do elemento da string de bits for igual a '\0', acaba o loop 
 	beq $s1, 10, end_loop_one 		# se o conteudo do elemento da string de bits for igual a '\n', acaba o loop
 	sll $t6, $t6, 1					#desloca o valor dentro de $t6 1 bit para a esquerda 

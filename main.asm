@@ -4,10 +4,10 @@
 str_input_base: .asciiz  "\n Coloque a base de entrada: "   
 str_output_base: .asciiz "\n Coloque a base de saida: "
 str_result:   .asciiz "\n O resultado: "
-str_input_base_error:  .asciiz "\nBase de entrada  incorreta, coloque valores v�lidos (2, 10 ou 16)... \n"
+str_input_base_error:  .asciiz "\nBase de entrada  incorreta, coloque valores validos (2, 10 ou 16)... \n"
 hexa_values: .byte '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G'
-acum_c:     .space 33
-end_acum:
+acum_c:     .space 50
+end_acum: .asciiz "\0"
 
 	.text 
 	.globl main 
@@ -36,14 +36,14 @@ main:
 	#Hexadecimal e binario: string
 	
 	#para binario
-	li $a1, 33 				#numero máximo de bytes a ser lido do número de entrada  ( será melhor explicado no decorrer do c�digo)
+	li $a1, 50 				#numero máximo de bytes a ser lido do número de entrada  ( será melhor explicado no decorrer do c�digo)
 	beq $t0, 2, num_bin  		#se a base colocado for 2, vai para num_bin
 	
 	#para decimal 			
 	beq $t0, 10, num_dec		#se a base colocada for 10, vai para num_dec
 	
 	#para hexadecimal
-	la $a1, 9					#numero máximo de bytes a ser lido no número de entrada (...)
+	la $a1, 20					#numero máximo de bytes a ser lido no número de entrada (...)
 	beq $t0, 16, num_hexa		#se a base colocada for 16, vai para num_hexa
 	
 #se a base de entrada inserida pelo usuario não for nem 2, 10 ou 16 ...
@@ -79,7 +79,7 @@ print_output_dec:
 	syscall
 	
 	#imprime o inteiro de saida (que estão em $t6)
-	li $v0, 1
+	li $v0, 36
 	la $a0, ($t6)
 	syscall
 	j end

@@ -21,7 +21,7 @@ hexa_to_dec:
 loop:
 	lb $s2, 0 ($t2)		#atualiza $s2 como o valor da nova posição de $t2 ( novo caractere dentro da string inserida pelo usuário)
 
-	beq $t4, 8, end_loop		#se o contador $t4 chegar em 8, que é o tamanho máximo de digitos suportado em hexadecimal, a entrada é invalida 
+	beq $t4, 9, invalid		#se o contador $t4 chegar em 8, que é o tamanho máximo de digitos suportado em hexadecimal, a entrada é invalida 
 	beq $s2, $zero,  end_loop 	#se o conteudo do elemento da string de bits for igual a '\0', acaba o loop 
 	beq $s2, 10, end_loop	# se o conteudo do elemento da string de bits for igual a '\n', acaba o loop
 	
