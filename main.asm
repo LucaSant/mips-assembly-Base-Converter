@@ -61,9 +61,12 @@ output_base:
 	la $a0,  str_output_base
 	syscall
 	
+	
 	#le a base de saida
 	li $v0, 5
 	syscall
+	
+	move $t9, $v0
 	
 	# a funcao output_base eh chamada dentro de num_bin, num_dec ou num_hexa, estao com 'jr $ra' ele retorna para elas 
 	jr $ra #volta 

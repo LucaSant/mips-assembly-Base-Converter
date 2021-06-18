@@ -62,7 +62,6 @@ num_hexa:
 	
 	
 	jal  output_base
-	move $t9, $v0
 	
 
 	beq $t9, 2, hexa_to_bin
@@ -119,5 +118,6 @@ noconversio_dec:
 	li $v0, 4
 	la $a0, str_output_base_error
 	syscall
+	
 	j output_base
 	
