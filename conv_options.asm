@@ -55,7 +55,7 @@ num_hexa:
 	la $a0, input_num_hexa
 	syscall
 
-	li $v0, 8
+	li $v0, 8			
 	la $a0, ($t8)
 	la $t2, ($a0)
 	syscall
@@ -83,19 +83,19 @@ noconversion_hexa:
 
 num_dec:
 	
-	li $v0, 4			#a entrada na base decimal eh um inteiro
+	li $v0, 4			
 	la $a0, input_num_dec
 	syscall
 
-	li $v0, 8
-	la $a0, ($t8)
+	li $v0, 8			# o numero em decimal taambem sera lido como uma string, (...)
+	la $a0, ($t8)		#(...) isso eh estabelecido para tratar o erro quando um nao algarismo eh colocado no input do numero
 	la $t2, ($a0)
 	syscall
 
 	jal output_base        #chama a funcao responsavel por ler a base de saida
 	move $t9, $v0         # move o valor da base para o registrador $a3
 	
-	jal char_to_int	#chama a funcao para pegar os caracteres e transformar em inteiros
+	jal char_to_int	 	#chama o modulo  para pegar os caracteres e transformar em inteiros
  	
 	#vai para funcao de conversao especifica
 	beq $t9, 2, dec_to_bin   
